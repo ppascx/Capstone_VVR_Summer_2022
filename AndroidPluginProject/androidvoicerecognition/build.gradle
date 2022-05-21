@@ -1,0 +1,56 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // Include Unity's classes.jar (for com.unity3d.player.UnityPlayer) as a compile time dependency
+    // and not as a runtime dependency; because Unity already has classes.jar packaging it again is
+    // redundant and will cause errors when building for Android
+    compileOnly files ('dependencies/classes.jar')
+
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+}
+
+afterEvaluate {
+    // Run copyPlugin task after assembleRelease task; this adds the task to the dependency tree
+    // of the build and ensures the task runs
+    // NOTE: Make sure the build variant of this module is "release"
+    assembleRelease.finalizedBy(copyPlugin)
+}
+
+// Copy your plugin to the Plugins folder of the Unity project
+task copyPlugin(type: Copy) {
+    from('build/outputs/aar')
+    // NOTE: The "into" call works based off the assumption that the "AndroidPluginProject" directory
+    // exists at the same level as the "Voice Controlled VR App" directory. If it is ever modified
+    // this path will need to be changed
+    into('../../Voice Controlled VR App/Assets/Plugins/Android')
+    include(project.name + '-release.aar')  // Only -release.aar is copied
+}

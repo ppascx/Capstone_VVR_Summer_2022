@@ -1,0 +1,4 @@
+{ "graph": {"directed": false,"moduleName" : "lol","freeRoam" : false},
+  "nodes": { "nodes": [{"nodeType": "video360", "id": 0, "src": "Videos/video1", "title": "funnytitle", "positionX" : 0.0 , "positionY" : 0.0 , "positionZ" : 0.0 },{"nodeType": "video360", "id": 1, "src": "Videos/video2", "title": "second funny title", "positionX" : 2.0 , "positionY" : 0.0 , "positionZ" : 1.0 }]},
+  "edges": { "edges":[{"source": 0, "target": 1}]}
+}
